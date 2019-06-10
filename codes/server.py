@@ -6,8 +6,8 @@ from tokenization import JumanPPTokenizer
 import numpy as np
 
 from bert_juman import BertWithJumanModel
-bert = BertWithJumanModel("./models/jm/",is_tokenized=True)
 
+bert = BertWithJumanModel("./models/jm/", is_tokenized=True)
 
 MAX_SEQ_LEN = 126
 jpp = JumanPPTokenizer()
@@ -15,6 +15,18 @@ jpp = JumanPPTokenizer()
 # bc = BertClient()
 
 app = Flask(__name__)
+
+def replace_all(text):
+    text = text.replace('\n','') \
+    .replace('\u3000','')  \
+    .replace('/','')  \
+    .replace('(','')  \
+    .replace(')','') \
+    .replace('xa','') \
+    .replace(u"\xa0",u"")
+    return text
+
+
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -40,8 +52,9 @@ def vector_average(v):
 def bert_api():
     try:
         texts_list = request.json['texts']
-        layer_num = int(request.json['layer'])
-        pooling_strategy =  request.json['pooling_strategy']
+        texts_list = [replace_all(t) for t in texts_list]
+        layer_num = int(float(request.json['layer']))
+        pooling_strategy = request.json['pooling_strategy']
         whole_tokens_list = [jpp.tokenize(t) for t in texts_list]
         vectorized_texts_list = []
 
@@ -55,8 +68,8 @@ def bert_api():
             tt = []
             for t in tokens_list:
                 vectorized_texts = bert.get_sentence_embedding(t,
-                                            pooling_layer=layer_num,
-                                            pooling_strategy=pooling_strategy).tolist()
+                                                               pooling_layer=layer_num,
+                                                               pooling_strategy=pooling_strategy).tolist()
                 tt.append(vectorized_texts)
 
             # vectorized_texts = bc.encode(tokens_list, is_tokenized=True).tolist()
@@ -79,4 +92,4 @@ def bert_api():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, threaded=True, debug=False)
