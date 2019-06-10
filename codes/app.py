@@ -16,16 +16,16 @@ jpp = JumanPPTokenizer()
 
 app = Flask(__name__)
 
-def replace_all(text):
-    text = text.replace('\n','') \
-    .replace('\u3000','')  \
-    .replace('/','')  \
-    .replace('(','')  \
-    .replace(')','') \
-    .replace('xa','') \
-    .replace(u"\xa0",u"")
-    return text
 
+def replace_all(text):
+    text = text.replace('\n', '') \
+        .replace('\u3000', '') \
+        .replace('/', '') \
+        .replace('(', '') \
+        .replace(')', '') \
+        .replace('xa', '') \
+        .replace(u"\xa0", u"")
+    return text
 
 
 def chunks(l, n):
@@ -47,6 +47,7 @@ def vector_average(v):
             continue
         res_v = res_v + np.array(v[i])
     return res_v
+
 
 @app.route("/text", methods=["POST"])
 def bert_api():

@@ -1,13 +1,22 @@
 version: "3"
 
 services:
-  python:
+  flask:
     container_name: bert_features_api
     build: ./
     restart: always
     stdin_open: true
-    ports:
-      - 80:5000
+    expose:
+      - 5000
 
-#    entrypoint: /usr/bin/env bash
-#    command: setup.sh
+  nginx:
+    build: nginx
+    tty: true
+    stdin_open: true
+    restart: always
+    links:
+    - flask
+    ports:
+    - 80:9000
+    volumes:
+    - ./nginx:/etc/nginx

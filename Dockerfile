@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 
 COPY ./codes ${main_dir}
 
-CMD python server.py
+CMD sh setup.sh

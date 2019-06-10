@@ -5,7 +5,6 @@ import torch
 from pytorch_pretrained_bert import BertTokenizer, BertModel
 from pyknp import Juman
 
-
 class JumanTokenizer():
     def __init__(self):
         self.juman = Juman()
@@ -13,6 +12,7 @@ class JumanTokenizer():
     def tokenize(self, text):
         result = self.juman.analysis(text)
         return [mrph.midasi for mrph in result.mrph_list()]
+
 
 class BertWithJumanModel():
     def __init__(self, bert_path, vocab_file_name="vocab.txt", use_cuda=False,is_tokenized=False):
@@ -25,6 +25,7 @@ class BertWithJumanModel():
 
     def _preprocess_text(self, text):
         return text.replace(" ", "")  # for Juman
+
 
     def get_sentence_embedding(self, text, pooling_layer=-2, pooling_strategy="REDUCE_MEAN"):
 

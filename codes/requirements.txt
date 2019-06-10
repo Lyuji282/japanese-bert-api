@@ -6,3 +6,4 @@ pyknp
 bert-serving-server
 bert-serving-client
 flask
+gunicorn
