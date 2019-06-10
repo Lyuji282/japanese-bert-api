@@ -34,17 +34,3 @@ Dockerを使った環境を提供することで、使用者はこのレポジ�
 
 
 をリクエストすることで、特徴量を受け取ることができる。
-
-
-bert-as-serviceを使用しているので、BERTの12/24層のうちからどのように特徴量を獲得するのかの設定は、[こちら](https://github.com/hanxiao/bert-as-service)を参考にして欲しい。
-
-
-
-
-`codes/setup.sh`が起動コマンドで、デフォルトの設定では、
-
-```
-bert-serving-start -model_dir ./models/jm/ -num_worker 1 max_seq_len=300000
-```
-
-という設定で立ち上がる。# jumanpp-bert-api
