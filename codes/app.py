@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from flask import Flask, request, jsonify
-from bert_serving.client import BertClient
 from tokenization import JumanPPTokenizer
 import numpy as np
-
+from bert_serving.client import BertClient
 from bert_juman import BertWithJumanModel
 
 bert = BertWithJumanModel("./models/jm/", is_tokenized=True)
@@ -13,7 +12,6 @@ MAX_SEQ_LEN = 126
 jpp = JumanPPTokenizer()
 
 # bc = BertClient()
-
 app = Flask(__name__)
 
 
@@ -35,6 +33,7 @@ def chunks(l, n):
 
 
 def vector_average(v):
+    global res_v
     v_len = len(v)
     if v_len <= 1:
         return v
@@ -51,6 +50,7 @@ def vector_average(v):
 
 @app.route("/text", methods=["POST"])
 def bert_api():
+    global res_v
     try:
         texts_list = request.json['texts']
         texts_list = [replace_all(t) for t in texts_list]
@@ -75,7 +75,9 @@ def bert_api():
 
             # vectorized_texts = bc.encode(tokens_list, is_tokenized=True).tolist()
             vectorized_texts = vector_average(tt)
+            res_v = np.array([])
             vectorized_texts_list.append(vectorized_texts)
+            vectorized_texts = []
 
         response = {
             'vectorized_texts': vectorized_texts_list,

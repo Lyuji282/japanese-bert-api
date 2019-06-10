@@ -10,6 +10,7 @@ RUN mkdir -p ${main_dir}
 WORKDIR ${main_dir}
 RUN pip install -r requirements.txt
 
+
 COPY ./codes ${main_dir}
 
 CMD sh setup.sh

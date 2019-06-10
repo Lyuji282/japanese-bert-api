@@ -1,22 +1,35 @@
 version: "3"
 
 services:
-  flask:
-    container_name: bert_features_api
+  flask1:
+    container_name: bert_features_api1
     build: ./
     restart: always
     stdin_open: true
     expose:
       - 5000
+    networks:
+    - bert
+
+  flask2:
+    container_name: bert_features_api2
+    build: ./
+    restart: always
+    stdin_open: true
+    expose:
+    - 5000
+    networks:
+    - bert
 
   nginx:
-    build: nginx
+    build: ./nginx
     tty: true
     stdin_open: true
     restart: always
-    links:
-    - flask
     ports:
     - 80:9000
-    volumes:
-    - ./nginx:/etc/nginx
+    networks:
+      - bert
+
+networks:
+  bert:
